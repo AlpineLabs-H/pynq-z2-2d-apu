@@ -1,0 +1,9 @@
+../src/rtl/cmd_fifi.sv
+../src/rtl/curve_draw.sv
+../src/rtl/draw_ctl.sv
+../src/rtl/framebuffer.sv
+../src/rtl/line_draw.sv
+../src/rtl/rect_fill.sv
+../src/rtl/spi_slave.sv
+../src/rtl/top_level_design.sv
+../src/rtl/vga_out.sv
