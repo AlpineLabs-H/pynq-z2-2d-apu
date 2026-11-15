@@ -5,7 +5,7 @@ XELAB ?= xelab
 XSIM ?= xsim
 VIVADO ?= vivado
 
-.PHONY: all compile sim project clean check-tools
+.PHONY: all compile sim project clean check-tools check-compile-tools check-sim-tools
 all: compile
 
 check-compile-tools:
@@ -19,13 +19,16 @@ compile: check-compile-tools
 	@mkdir -p $(BUILD)
 	@cd $(BUILD) && $(XVLOG) -sv -work work -f ../scripts/filelist_sv.f
 
-# Add your authored testbench to scripts/filelist_tb.f and set TB_TOP to use this target.
-TB_TOP ?=
+# Override TB_TOP when running a different testbench.
+TB_TOP ?= Video_timing_tb
 sim: compile check-sim-tools
-	@test -n "$(TB_TOP)" || { echo "Set TB_TOP to your testbench module after adding it to filelist_tb.f"; exit 2; }
 	@cd $(BUILD) && $(XVLOG) -sv -work work -f ../scripts/filelist_tb.f
 	@cd $(BUILD) && $(XELAB) -debug typical work.$(TB_TOP) -s $(TB_TOP)
-	@cd $(BUILD) && $(XSIM) $(TB_TOP) -runall
+	@cd $(BUILD) && { \
+		$(XSIM) $(TB_TOP) -runall > xsim_run.log 2>&1; status=$$?; \
+		cat xsim_run.log; \
+		if [ $$status -ne 0 ] || grep -q "ERROR: unexpected exception" xsim_run.log; then exit 1; fi; \
+	}
 
 project:
 	@command -v $(VIVADO) >/dev/null || { echo "Missing $(VIVADO); source Vivado settings64.sh"; exit 1; }

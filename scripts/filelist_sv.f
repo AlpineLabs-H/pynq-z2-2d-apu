@@ -7,3 +7,4 @@
 ../src/rtl/spi_slave.sv
 ../src/rtl/top_level_design.sv
 ../src/rtl/vga_out.sv
+../src/rtl/video_timing.sv
