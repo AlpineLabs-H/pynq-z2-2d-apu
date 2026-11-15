@@ -73,11 +73,11 @@ module hdmi_timing_controller #(
             de <= (h_cnt < H_ACTIVE) && (v_cnt < V_ACTIVE);
 
             // Coordinates (clamped to 0 during blanking)
-            pixel_x <= ((h_cnt < H_ACTIVE) && (v_cnt < V_ACTIVE)) ? 12'(h_cnt) : 12'd0;
-            pixel_y <= ((h_cnt < H_ACTIVE) && (v_cnt < V_ACTIVE)) ? 12'(v_cnt) : 12'd0;
+            pixel_x <= (h_cnt < H_ACTIVE) ? 12'(h_cnt) : 12'd0;
+            pixel_y <= (v_cnt < V_ACTIVE) ? 12'(v_cnt) : 12'd0;
 
             // Useful trigger for updating framebuffers or game logic
-            frame_start <= (h_cnt == 0) && (v_cnt == 0);
+            frame_start <= (h_cnt == 0) && (h_cnt == 0);
         end
     end
 
